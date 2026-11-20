@@ -5,12 +5,15 @@ const MAX_TURNS = 12;
 let history = [];
 let status = null; // null = belum dicek, {ready, provider, model}
 
+// Kosong = server yang sama (npm run dev / Render). Di Firebase, isi <meta name="aegis-api"> dengan URL Worker.
+const API = (typeof document !== "undefined" && document.querySelector('meta[name="aegis-api"]')?.content?.trim().replace(/\/+$/, "")) || "";
+
 export function resetChat() { history = []; }
 export function getHistory() { return history.slice(); }
 
 export async function checkAI(fetchFn = fetch) {
   try {
-    const r = await fetchFn("/api/health", { cache: "no-store" });
+    const r = await fetchFn(`${API}/api/health`,{ cache: "no-store" });
     const j = r.ok ? await r.json() : null;
     status = j && j.ok ? j : { ready: false };
   } catch { status = { ready: false }; }
@@ -25,7 +28,7 @@ export async function askAI(text, { signal, context = "", fetchFn = fetch } = {}
   if (!status.ready) return null;
   const messages = [...history, { role: "user", content: text }];
   try {
-    const r = await fetchFn("/api/chat", {
+    const r = await fetchFn(`${API}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ messages, lang: getLang(), context }),

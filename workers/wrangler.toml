@@ -1,0 +1,7 @@
+name = "aegis-chat"
+main = "chat-worker.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://aegis-reyganz82.web.app"
+# AI_API_KEY diisi sebagai secret (jangan ditulis di sini):  npx wrangler secret put AI_API_KEY

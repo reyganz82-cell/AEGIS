@@ -1,0 +1,20 @@
+{
+    "name":  "aegis-assistant",
+    "version":  "2.0.0",
+    "private":  true,
+    "description":  "A.E.G.I.S. - Full Vision System: asisten AI pribadi dengan penglihatan komputer di browser",
+    "type":  "module",
+    "scripts":  {
+                    "setup":  "node scripts/download-models.mjs",
+                    "dev":  "node server.js",
+                    "start":  "node server.js",
+                    "test":  "node --test test/vision.test.mjs test/ai.test.mjs test/iot.test.mjs",
+                    "test:e2e":  "node test/e2e-edge.mjs"
+                },
+    "dependencies":  {
+                         "@mediapipe/tasks-vision":  "^0.10.14"
+                     },
+    "engines":  {
+                    "node":  ">=18"
+                }
+}

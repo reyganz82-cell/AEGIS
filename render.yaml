@@ -1,0 +1,16 @@
+# Blueprint Render (opsional): New → Blueprint → pilih repo ini. Paket gratis.
+services:
+  - type: web
+    name: aegis
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: AI_PROVIDER
+        value: groq
+      - key: AI_API_KEY
+        sync: false        # diisi manual di dashboard Render (jangan ditulis di file)
+      - key: TRUST_PROXY
+        value: "1"

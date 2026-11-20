@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#02060d" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="AEGIS" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>A.E.G.I.S. — Personal AI Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-state="idle">
+  <!-- Background layers -->
+  <div class="bg-grid"></div>
+  <div class="bg-vignette"></div>
+  <div class="scanlines"></div>
+
+  <!-- ===================== BOOT OVERLAY ===================== -->
+  <div id="boot" class="boot">
+    <div class="boot-inner">
+      <div class="boot-reactor">
+        <span></span><span></span><span></span>
+      </div>
+      <h1 class="boot-title">A.E.G.I.S.</h1>
+      <p class="boot-sub">Autonomous Eye &amp; Guard Intelligence System</p>
+      <button id="bootBtn" class="btn btn-primary btn-boot">INITIALIZE SYSTEM</button>
+      <div class="lang-switch" role="group" aria-label="Language" data-i18n-title="ui.t.lang" title="Switch language / Ganti bahasa">
+      <button type="button" data-lang="id" aria-pressed="false">ID</button><button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+      <p class="boot-note" data-i18n="ui.boot.note">Klik untuk mengaktifkan antarmuka &amp; modul suara</p>
+    </div>
+  </div>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="hud-header">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" />
+        <circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="2" />
+        <circle cx="20" cy="20" r="5" fill="currentColor" />
+      </svg>
+      <div class="logo-text">
+        <span class="logo-name">A.E.G.I.S.</span>
+        <span class="logo-tag">FULL VISION SYSTEM · v2.0</span>
+      </div>
+    </div>
+
+    <div class="header-status">
+      <span class="dot dot-ok"></span>
+      <span>SYSTEM</span>
+      <b id="hdrSystem">ONLINE</b>
+      <span id="camLive" class="live-chip live-cam" hidden>● CAMERA LIVE</span>
+      <span id="micLive" class="live-chip live-mic" hidden>● MIC LIVE</span>
+    </div>
+
+    <div class="lang-switch" role="group" aria-label="Language" data-i18n-title="ui.t.lang" title="Switch language / Ganti bahasa">
+      <button type="button" data-lang="id" aria-pressed="false">ID</button><button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+
+    <div class="header-clock">
+      <span id="hdrDate">--</span>
+      <span id="hdrTime" class="mono">--:--:--</span>
+    </div>
+
+    <div class="widget-dock" role="toolbar" aria-label="Widgets">
+      <button type="button" class="dock-btn" data-open="clock" title="Chronometer" aria-label="Chronometer" aria-expanded="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></button>
+      <button type="button" class="dock-btn" data-open="weather" title="Weather" aria-label="Weather" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 0-8 6 6 0 0 0-11.5 1.5A3.3 3.3 0 0 0 7 18z"/></svg></button>
+      <button type="button" class="dock-btn" data-open="calc" title="Calculator" aria-label="Calculator" aria-expanded="false"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M16 12h0M8 16h2M12 16h2M16 16h0"/></svg></button>
+      <button type="button" class="dock-btn" data-open="iot" title="IoT" aria-label="IoT" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/><path d="M9 20v-6h6v6"/></svg></button>
+      <button type="button" class="dock-btn" data-open="log" title="Activity log" aria-label="Activity log" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg></button>
+    </div>
+  </header>
+
+  <!-- ===================== MAIN ===================== -->
+  <main class="hud-main">
+    <!-- LEFT PANEL -->
+    <aside class="widgets" id="widgets" aria-label="Widgets">
+      <section class="card" data-widget="clock">
+        <div class="card-title"><span>CHRONOMETER</span><span class="badge badge-ok">LIVE</span></div>
+        <div class="clock-big mono" id="clockBig">--:--</div>
+        <div class="clock-sec mono"><span id="clockSec">--</span> SEC</div>
+        <div class="sec-bar"><div id="secBar"></div></div>
+        <div class="info-row"><span data-i18n="ui.date">TANGGAL</span><b id="dateFull">--</b></div>
+        <div class="info-row"><span data-i18n="ui.tz">ZONA WAKTU</span><b id="tzName">--</b></div>
+      </section>
+
+      <section class="card" data-widget="weather">
+        <div class="card-title"><span>ATMOSPHERIC DATA</span><span class="badge" id="wxBadge">LOADING</span></div>
+        <div class="weather-main">
+          <div class="weather-icon" id="wxIcon" aria-hidden="true"></div>
+          <div>
+            <div class="temp-big mono"><span id="wxTemp">--</span><small>°C</small></div>
+            <div class="weather-cond" id="wxCond">--</div>
+          </div>
+        </div>
+        <div class="info-row"><span data-i18n="ui.humidity">KELEMBAPAN</span><b id="wxHum">--</b></div>
+        <div class="info-row"><span data-i18n="ui.wind">ANGIN</span><b id="wxWind">--</b></div>
+        <div class="info-row"><span data-i18n="ui.feels">TERASA SEPERTI</span><b id="wxFeels">--</b></div>
+        <p class="note" id="wxNote">…</p>
+      </section>
+
+      <section class="card" id="calcCard" data-widget="calc">
+        <div class="card-title"><span>SMART CALCULATOR</span><span class="badge badge-ok" data-i18n="ui.calc.badge">VOICE · TEXT · KEYPAD</span></div>
+        <div class="calc-display" aria-live="polite">
+          <div id="calcExpr" class="calc-expr mono">Katakan "hitung 125 dikali 8"</div>
+          <div id="calcResult" class="calc-result mono">0</div>
+        </div>
+        <div class="calc-keys" id="calcKeys">
+          <button type="button" data-k="C" class="k-fn">C</button>
+          <button type="button" data-k="⌫" class="k-fn" aria-label="Hapus satu karakter">⌫</button>
+          <button type="button" data-k="(" class="k-fn">(</button>
+          <button type="button" data-k=")" class="k-fn">)</button>
+          <button type="button" data-k="√" class="k-fn" aria-label="Akar">√</button>
+          <button type="button" data-k="%" class="k-fn">%</button>
+          <button type="button" data-k="^" class="k-fn" aria-label="Pangkat">^</button>
+          <button type="button" data-k="÷" class="k-op" aria-label="Bagi">÷</button>
+          <button type="button" data-k="7">7</button>
+          <button type="button" data-k="8">8</button>
+          <button type="button" data-k="9">9</button>
+          <button type="button" data-k="×" class="k-op" aria-label="Kali">×</button>
+          <button type="button" data-k="4">4</button>
+          <button type="button" data-k="5">5</button>
+          <button type="button" data-k="6">6</button>
+          <button type="button" data-k="−" class="k-op" aria-label="Kurang">−</button>
+          <button type="button" data-k="1">1</button>
+          <button type="button" data-k="2">2</button>
+          <button type="button" data-k="3">3</button>
+          <button type="button" data-k="+" class="k-op" aria-label="Tambah">+</button>
+          <button type="button" data-k="0">0</button>
+          <button type="button" data-k="," data-dec aria-label="Desimal / Decimal">,</button>
+          <button type="button" data-k="=" class="k-eq">=</button>
+        </div>
+        <ul id="calcHistory" class="calc-history"></ul>
+      </section>
+
+      <section class="card" data-widget="iot" id="iotCard">
+        <div class="card-title"><span>IOT HOME</span><span id="iotBadge" class="badge">—</span></div>
+        <form id="iotTokenForm" class="iot-token" autocomplete="off">
+          <input id="iotTokenInput" type="password" data-i18n-ph="iot.tokenPh" placeholder="Token IoT" aria-label="Token IoT" />
+          <button type="submit" class="btn">OK</button>
+        </form>
+        <div id="iotSensors" class="iot-sensors"></div>
+        <div id="iotOutputs" class="iot-outputs"></div>
+        <ul id="iotEvents" class="log iot-events"></ul>
+        <p class="note" id="iotNote">—</p>
+        <button type="button" id="iotLogout" class="link-btn" data-i18n="iot.logout" hidden>Ganti token</button>
+      </section>
+
+      <section class="card card-log" data-widget="log">
+        <div class="card-title"><span>ACTIVITY LOG</span></div>
+        <ul id="log" class="log"></ul>
+      </section>
+    </aside>
+
+    <!-- CENTER: HOLOGRAM CORE -->
+    <section class="core-area">
+      <div class="core-wrap" id="core">
+        <div class="core-halo" aria-hidden="true"></div>
+        <div class="core-sweep" aria-hidden="true"></div>
+        <svg class="core-svg" viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <radialGradient id="coreGrad">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+              <stop offset="30%" stop-color="#ffffff" stop-opacity="0.7" />
+              <stop offset="55%" stop-color="currentColor" stop-opacity="0.65" />
+              <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+            </radialGradient>
+            <radialGradient id="discGrad">
+              <stop offset="0%" stop-color="currentColor" stop-opacity="0.22" />
+              <stop offset="100%" stop-color="currentColor" stop-opacity="0.02" />
+            </radialGradient>
+            <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="2.2" result="b" />
+              <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
+
+          <!-- cakram hologram samar -->
+          <circle cx="200" cy="200" r="120" fill="url(#discGrad)" />
+
+          <g filter="url(#glow)" fill="none" stroke="currentColor">
+            <!-- crosshair statis di 4 arah -->
+            <g class="ticks" opacity="0.8" stroke-width="2">
+              <line x1="200" y1="0" x2="200" y2="9" />
+              <line x1="200" y1="391" x2="200" y2="400" />
+              <line x1="0" y1="200" x2="9" y2="200" />
+              <line x1="391" y1="200" x2="400" y2="200" />
+            </g>
+            <!-- 1. cincin tick terluar (120 tick) -->
+            <g class="ring" data-speed="3"><circle cx="200" cy="200" r="193" pathLength="360" stroke-width="7" stroke-dasharray="0.5 2.5" opacity="0.65" /></g>
+            <!-- 2. garis tipis statis -->
+            <circle cx="200" cy="200" r="186" stroke-width="1" opacity="0.45" />
+            <!-- 3. busur segmen -->
+            <g class="ring" data-speed="-8"><circle cx="200" cy="200" r="179" pathLength="360" stroke-width="3" stroke-dasharray="100 12 60 12 90 12 50 24" opacity="0.9" /></g>
+            <!-- (area visualizer canvas: r 128 – 172) -->
+            <!-- 4. busur tebal -->
+            <g class="ring" data-speed="12"><circle cx="200" cy="200" r="120" pathLength="360" stroke-width="8" stroke-dasharray="80 10 80 10 80 10 70 20" opacity="0.55" /></g>
+            <!-- 5. cincin tipis dengan penanda -->
+            <g class="ring" data-speed="-5">
+              <circle cx="200" cy="200" r="109" stroke-width="1.2" opacity="0.7" />
+              <circle cx="200" cy="91" r="3.2" fill="currentColor" stroke="none" />
+              <circle cx="200" cy="309" r="3.2" fill="currentColor" stroke="none" />
+              <circle cx="91" cy="200" r="2" fill="currentColor" stroke="none" />
+              <circle cx="309" cy="200" r="2" fill="currentColor" stroke="none" />
+            </g>
+            <!-- 6. tick rapat -->
+            <g class="ring" data-speed="-18"><circle cx="200" cy="200" r="98" pathLength="360" stroke-width="9" stroke-dasharray="0.6 4.4" opacity="0.5" /></g>
+            <!-- 7. busur cepat -->
+            <g class="ring" data-speed="26"><circle cx="200" cy="200" r="85" pathLength="360" stroke-width="3" stroke-dasharray="180 40 100 40" /></g>
+            <!-- 8. heksagon inti -->
+            <g class="ring" data-speed="-30">
+              <polygon points="200,132 258.9,166 258.9,234 200,268 141.1,234 141.1,166" stroke-width="1.6" opacity="0.85" />
+              <polygon points="200,146 246.8,173 246.8,227 200,254 153.2,227 153.2,173" stroke-width="1" opacity="0.5" />
+            </g>
+            <circle class="core-ring" cx="200" cy="200" r="50" stroke-width="3" />
+            <circle cx="200" cy="200" r="42" stroke-width="1" opacity="0.6" />
+          </g>
+          <circle class="core-glow" cx="200" cy="200" r="64" fill="url(#coreGrad)" />
+        </svg>
+        <canvas id="viz" class="viz"></canvas>
+        <div class="core-label">AEGIS</div>
+      </div>
+
+      <div class="state-indicator">
+        <span class="state-dot"></span>
+        <span id="stateText">IDLE</span>
+      </div>
+
+      <div class="transcript">
+        <div class="t-line t-user"><span class="t-tag">YOU</span><span id="userText" class="t-text">—</span></div>
+        <div class="t-line t-aegis"><span class="t-tag">AEGIS</span><span id="aegisText" class="t-text">Menunggu inisialisasi sistem…</span></div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: VISION CONTROL CENTER -->
+    <aside class="panel panel-right">
+      <section class="card">
+        <div class="card-title"><span>OPTICAL SENSOR</span><span id="camBadge" class="badge">OFFLINE</span></div>
+        <div class="cam-view" id="camView">
+          <video id="video" playsinline muted></video>
+          <canvas id="overlay"></canvas>
+          <div id="camPlaceholder" class="cam-placeholder">
+            <span data-i18n="ui.camoff">KAMERA NONAKTIF</span>
+            <small data-i18n="ui.camoff.sub">Tekan tombol CAMERA atau katakan "aktifkan kamera"</small>
+          </div>
+          <div class="cam-corners"></div>
+          <div id="camAlert" class="cam-alert">⚠ MOTION DETECTED</div>
+          <div id="camLiveTag" class="cam-live-tag">● LIVE</div>
+          <div id="camHud" class="cam-hud mono"></div>
+        </div>
+        <p class="note" data-i18n="ui.privacy">🔒 Video diproses lokal di browser ini. Tidak ada gambar atau rekaman yang dikirim ke server.</p>
+      </section>
+
+      <section class="card" id="vcCard">
+        <div class="card-title"><span>VISION CONTROL CENTER</span><span id="engineStatus" class="badge">STANDBY</span></div>
+        <div class="vc-row"><span>HAND TRACKING</span><span class="vc-status" id="st-hands">OFF</span><input type="checkbox" class="switch" data-feature="hands" aria-label="Hand tracking" /></div>
+        <div class="vc-row"><span>OBJECT DETECTION</span><span class="vc-status" id="st-objects">OFF</span><input type="checkbox" class="switch" data-feature="objects" aria-label="Deteksi objek" /></div>
+        <div class="vc-row"><span>FACE DETECTION</span><span class="vc-status" id="st-faces">OFF</span><input type="checkbox" class="switch" data-feature="faces" aria-label="Deteksi wajah" /></div>
+        <div class="vc-row"><span>BODY POSE</span><span class="vc-status" id="st-pose">OFF</span><input type="checkbox" class="switch" data-feature="pose" aria-label="Deteksi pose tubuh" /></div>
+        <div class="vc-row"><span>MOTION DETECTION</span><span class="vc-status" id="st-motion">OFF</span><input type="checkbox" class="switch" data-feature="motion" aria-label="Deteksi gerakan" /></div>
+        <label class="voice-select">
+          <span data-i18n="ui.quality">KUALITAS DETEKSI</span>
+          <select id="qualitySelect">
+            <option value="rendah" data-i18n="ui.q.rendah">RENDAH — hemat CPU, 480p</option>
+            <option value="sedang" selected data-i18n="ui.q.sedang">SEDANG — seimbang, 640p</option>
+            <option value="tinggi" data-i18n="ui.q.tinggi">TINGGI — paling akurat, 720p</option>
+          </select>
+        </label>
+        <label class="slider">
+          <span><span data-i18n="ui.sens">SENSITIVITAS GERAKAN</span> <b id="sensText" class="mono">60%</b></span>
+          <input id="sensRange" type="range" min="5" max="100" value="60" />
+        </label>
+        <div class="info-row"><span>FPS</span><b id="fpsText" class="mono">—</b></div>
+        <div class="info-row"><span data-i18n="ui.light">PENCAHAYAAN</span><b id="lightText" class="mono">—</b></div>
+        <div class="toggle-row">
+          <label><input type="checkbox" id="optBoxes" checked /> <span data-i18n="ui.optBoxes">Kotak gerakan</span></label>
+          <label><input type="checkbox" id="optZones" /> <span data-i18n="ui.optZones">Peta zona</span></label>
+        </div>
+        <p id="vcError" class="note vc-error" hidden></p>
+      </section>
+
+      <section class="card">
+        <div class="card-title"><span>GESTURE RECOGNITION</span><span id="gestureBadge" class="badge">STANDBY</span></div>
+        <div class="gesture-name" id="gestureName">—</div>
+        <div class="meter-label"><span>CONFIDENCE</span><span id="gestureScore" class="mono">0%</span></div>
+        <div class="meter"><div id="gestureBar"></div></div>
+        <div class="meter-label"><span>GREETING COOLDOWN</span><span id="cooldownText" class="mono">READY</span></div>
+        <div class="meter meter-warn"><div id="cooldownBar"></div></div>
+        <p class="note" data-i18n="ui.gestureNote">Acungkan 👍 ke kamera agar AEGIS menyapa Anda.</p>
+      </section>
+
+      <section class="card">
+        <div class="card-title"><span>BODY POSE</span><span id="poseBadge" class="badge">OFF</span></div>
+        <div id="poseInfo" class="pose-info">Aktifkan BODY POSE untuk memahami gerakan tubuh (tangan terangkat, posisi tubuh, aktivitas).</div>
+      </section>
+
+      <section class="card" id="motionCard">
+        <div class="card-title"><span>MOTION &amp; GUARD</span><span id="motionBadge" class="badge">OFF</span></div>
+        <div class="meter-label"><span>MOTION LEVEL</span><span id="motionLevel" class="mono">0%</span></div>
+        <div class="meter meter-motion"><div id="motionBar"></div></div>
+        <div class="info-row"><span data-i18n="ui.motionEvents">KEJADIAN GERAK</span><b id="motionEvents" class="mono">0</b></div>
+        <div class="info-row"><span data-i18n="ui.motionLast">GERAKAN TERAKHIR</span><b id="motionLast" class="mono">—</b></div>
+        <div class="info-row"><span data-i18n="ui.guardMode">MODE JAGA</span><b id="guardStatus">DISARMED</b></div>
+        <div class="toggle-row">
+          <label><input type="checkbox" id="optAutoSnap" checked /> <span data-i18n="ui.autoSnap">Auto-foto saat jaga</span></label>
+          <label><input type="checkbox" id="optRecord" checked /> <span data-i18n="ui.record">Rekam klip saat alarm</span></label>
+          <label><input type="checkbox" id="optPersonOnly" /> <span data-i18n="ui.personOnly">Alarm hanya jika ada orang</span></label>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-title"><span>OBJECT &amp; HUMAN</span><span id="objBadge" class="badge">OFF</span></div>
+        <div id="objList" class="obj-list"><small class="note">Aktifkan OBJECT DETECTION untuk mengenali objek (orang, ponsel, laptop, dll).</small></div>
+        <div class="info-row"><span data-i18n="ui.persons">ORANG TERLIHAT</span><b id="personCount" class="mono">—</b></div>
+        <div class="info-row"><span data-i18n="ui.faces">WAJAH TERDETEKSI</span><b id="faceCount" class="mono">—</b></div>
+        <p class="note" data-i18n="ui.fsNote">Klik dua kali pada layar kamera untuk fullscreen.</p>
+      </section>
+
+      <section class="card">
+        <div class="card-title"><span>SNAPSHOT &amp; CLIPS</span><span id="snapCount" class="badge">0</span></div>
+        <div id="snapGallery" class="gallery"><small class="note" data-i18n="ui.snapNone">Belum ada foto. Tekan tombol SNAP atau katakan "ambil foto".</small></div>
+      </section>
+
+      <section class="card">
+        <div class="card-title"><span>SYSTEM DIAGNOSTICS</span></div>
+        <div class="info-row"><span>SYSTEM</span><b class="ok" id="sysStatus">ONLINE</b></div>
+        <div class="info-row"><span>NETWORK</span><b id="netStatus">--</b></div>
+        <div class="info-row"><span>MICROPHONE</span><b id="micStatus">STANDBY</b></div>
+        <div class="info-row"><span>CAMERA</span><b id="camStatus">OFFLINE</b></div>
+        <div class="info-row"><span>SPEECH RECOG.</span><b id="srStatus">--</b></div>
+        <div class="info-row"><span>VISION LIBRARY</span><b id="libStatus">STANDBY</b></div>
+        <label class="voice-select">
+          <span>VOICE MODULE</span>
+          <select id="voiceSelect"><option>Memuat suara…</option></select>
+        </label>
+        <p id="voiceNote" class="note"></p>
+      </section>
+    </aside>
+  </main>
+
+  <!-- ===================== COMMAND BAR ===================== -->
+  <footer class="command-bar">
+    <form id="chatForm" class="chat-form" autocomplete="off">
+      <span class="prompt-sign mono">&gt;_</span>
+      <input id="chatInput" type="text" data-i18n-ph="ui.chatPh" placeholder="Ketik perintah… (mis. &quot;aktifkan kamera&quot;, &quot;apa yang kamu lihat?&quot;). Suara: tahan MIC / Spasi" />
+      <button type="submit" class="btn btn-primary" id="sendBtn">
+        <svg viewBox="0 0 24 24"><path d="M3 11l18-8-8 18-2-8-8-2z" /></svg><span>SEND</span>
+      </button>
+    </form>
+    <div class="cmd-buttons">
+      <button class="btn" id="micBtn" type="button" data-i18n-title="ui.t.mic" title="Push-to-talk: TAHAN tombol ini (atau tombol Spasi) sambil berbicara, lepas untuk mengirim">
+        <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3" /></svg><span>HOLD TO TALK</span>
+      </button>
+      <button class="btn" id="camBtn" type="button" data-i18n-title="ui.t.cam" title="Nyalakan / matikan kamera">
+        <svg viewBox="0 0 24 24"><rect x="3" y="7" width="13" height="10" rx="2" /><path d="M16 11l5-3v8l-5-3z" /></svg><span>CAMERA</span>
+      </button>
+      <button class="btn" id="motionBtn" type="button" data-i18n-title="ui.t.motion" title="Aktifkan deteksi gerakan">
+        <svg viewBox="0 0 24 24"><path d="M2 12h4l3-8 4 16 3-8h6" /></svg><span>MOTION</span>
+      </button>
+      <button class="btn" id="guardBtn" type="button" data-i18n-title="ui.t.guard" title="Mode jaga: alarm saat ada gerakan">
+        <svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" /></svg><span>GUARD</span>
+      </button>
+      <button class="btn" id="snapBtn" type="button" data-i18n-title="ui.t.snap" title="Ambil foto dari kamera">
+        <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2" /><circle cx="12" cy="13" r="3.5" /><path d="M8 7l1.5-3h5L16 7" /></svg><span>SNAP</span>
+      </button>
+      <button class="btn btn-danger" id="stopBtn" type="button" data-i18n-title="ui.t.stop" title="Hentikan suara AEGIS">
+        <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1" /></svg><span>STOP VOICE</span>
+      </button>
+      <button class="btn btn-emergency" id="emergencyBtn" type="button" data-i18n-title="ui.t.emergency" title="Emergency stop: matikan kamera, mikrofon, dan semua pemrosesan vision">
+        <svg viewBox="0 0 24 24"><path d="M12 2v10M6.3 5.3a9 9 0 1 0 11.4 0" /></svg><span>EMERGENCY STOP</span>
+      </button>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+   
+  <script>
+    // ES module & kamera tidak berfungsi bila halaman dibuka langsung (file://)
+    if (location.protocol === "file:") {
+      var n = document.querySelector(".boot-note");
+      if (n) { n.textContent = "⚠ Jangan buka file ini langsung. Jalankan lewat Live Server (VS Code) atau 'npm run dev' — lihat README.md  ·  ⚠ Don't open this file directly. Use Live Server (VS Code) or 'npm run dev' — see README.md"; n.style.color = "#ff4d6d"; }
+    }
+  </script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>

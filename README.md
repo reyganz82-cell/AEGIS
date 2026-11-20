@@ -1,3 +1,13 @@
+---
+title: AEGIS
+emoji: 🛡️
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 8080
+pinned: false
+---
+
 # A.E.G.I.S. — Full Vision System v2.0
 
 Asisten AI pribadi di browser: melihat lewat webcam, mengenali gestur tangan dan objek, mendeteksi manusia dan gerakan,
